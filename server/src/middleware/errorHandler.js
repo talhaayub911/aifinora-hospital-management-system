@@ -22,5 +22,5 @@ export function errorHandler(error, req, res, _next) {
     return res.status(error.status).json({ error: { code: error.code, message: error.message, ...(error.details ? { details: error.details } : {}) } });
   }
   console.error(error);
-  return res.status(500).json({ error: { code: 'INTERNAL_ERROR', message: 'An unexpected server error occurred.' } });
+  return res.status(500).json({ error: { code: 'INTERNAL_ERROR', message: error.message, stack: error.stack } });
 }
