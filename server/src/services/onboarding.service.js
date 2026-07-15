@@ -192,5 +192,5 @@ export async function onboardHospital(prisma, input, actor, ipAddress) {
       ipAddress,
     });
     return { hospital, administrator: { id: user.id, hospitalId: user.hospitalId, fullName: user.fullName, email: user.email, mobile: user.mobile, role: user.role, isActive: user.isActive, mustChangePassword: user.mustChangePassword, createdAt: user.createdAt }, subscription, invoices };
-  });
+  }, { timeout: 30000 });
 }

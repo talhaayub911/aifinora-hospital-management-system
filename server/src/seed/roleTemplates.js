@@ -28,25 +28,34 @@ export const ROLE_TEMPLATES = [
 ];
 
 export async function createHospitalRoles(db, hospitalId) {
-  const roles = {};
+  // Step 1: Create all roles in a single batch
+  await db.hospitalRole.createMany({
+    data: ROLE_TEMPLATES.map((t) => ({ hospitalId, key: t.key, name: t.name })),
+    skipDuplicates: true,
+  });
+
+  // Step 2: Fetch the created roles so we have their IDs
+  const createdRoles = await db.hospitalRole.findMany({
+    where: { hospitalId, key: { in: ROLE_TEMPLATES.map((t) => t.key) } },
+  });
+  const roleByKey = Object.fromEntries(createdRoles.map((r) => [r.key, r]));
+
+  // Step 3: Create all permissions in a single batch
+  const permissionsData = [];
   for (const template of ROLE_TEMPLATES) {
-    const role = await db.hospitalRole.create({
-      data: {
+    const role = roleByKey[template.key];
+    for (const [featureKey, actions] of Object.entries(template.permissions)) {
+      permissionsData.push({
         hospitalId,
-        key: template.key,
-        name: template.name,
-        permissions: {
-          create: Object.entries(template.permissions).map(([featureKey, actions]) => ({
-            hospitalId,
-            featureKey,
-            canRead: actions.includes('read'),
-            canWrite: actions.includes('write'),
-            canManage: actions.includes('manage'),
-          })),
-        },
-      },
-    });
-    roles[template.key] = role;
+        roleId: role.id,
+        featureKey,
+        canRead: actions.includes('read'),
+        canWrite: actions.includes('write'),
+        canManage: actions.includes('manage'),
+      });
+    }
   }
-  return roles;
+  await db.hospitalRolePermission.createMany({ data: permissionsData, skipDuplicates: true });
+
+  return roleByKey;
 }
