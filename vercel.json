@@ -1,0 +1,14 @@
+{
+  "framework": "vite",
+  "buildCommand": "npm run prisma:generate && npm run build",
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
