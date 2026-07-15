@@ -1,0 +1,2 @@
+# This file is generated for Prisma Migrate. Do not edit it manually.
+provider = "sqlite"

@@ -1,0 +1,14 @@
+.git
+.github
+.env
+.env.*
+!.env.example
+node_modules
+dist
+coverage
+*.log
+server/prisma/*.db
+server/prisma/*.db-*
+server/test-uploads
+server/storage/payment-proofs/*
+!server/storage/payment-proofs/seed-*.png

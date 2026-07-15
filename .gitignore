@@ -1,0 +1,15 @@
+node_modules/
+server/node_modules/
+dist/
+.env
+*.log
+
+# Local Prisma databases and transient upload/test data
+server/prisma/*.db
+server/prisma/*.db-*
+server/prisma/*.db-journal
+server/uploads/
+server/test-uploads/
+server/storage/payment-proofs/*
+!server/storage/payment-proofs/seed-*.png
+coverage/

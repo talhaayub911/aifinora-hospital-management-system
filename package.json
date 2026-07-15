@@ -1,0 +1,65 @@
+{
+  "name": "ai-finora-hospital-management-demo",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "concurrently --kill-others-on-fail \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:client": "vite",
+    "dev:server": "node --watch server/src/index.js",
+    "start": "node server/src/index.js",
+    "build": "cross-env VITE_SHOW_DEMO_ACCOUNTS=false vite build",
+    "verify:bundle": "node server/scripts/verifyProductionBundle.js",
+    "preview": "vite preview",
+    "prisma:generate": "prisma generate --schema server/prisma/schema.prisma",
+    "migrate": "prisma migrate dev --schema server/prisma/schema.prisma",
+    "migrate:deploy": "prisma migrate deploy --schema server/prisma/schema.prisma",
+    "db:push": "prisma db push --schema server/prisma/schema.prisma",
+    "db:bootstrap": "node server/scripts/bootstrapDatabase.js",
+    "db:bootstrap:demo": "node server/scripts/bootstrapDatabase.js --seed-if-empty",
+    "seed": "prisma db seed --schema server/prisma/schema.prisma",
+    "pretest": "npm run prisma:generate",
+    "test": "cross-env DATABASE_URL=file:./test.db NODE_ENV=test vitest run --pool=forks --poolOptions.forks.singleFork=true",
+    "pretest:watch": "npm run prisma:generate",
+    "test:watch": "cross-env DATABASE_URL=file:./test.db NODE_ENV=test vitest",
+    "verify": "npm run lint && npm run test && npm run build && npm run verify:bundle",
+    "lint": "eslint . --max-warnings=0",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.0",
+    "@vitejs/plugin-react": "^6.0.3",
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "lucide-react": "^1.24.0",
+    "multer": "^2.0.2",
+    "react-router-dom": "^7.8.2",
+    "zod": "^4.1.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.0.0",
+    "eslint": "^10.7.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.3",
+    "globals": "^17.7.0",
+    "prisma": "^6.19.0",
+    "supertest": "^7.1.4",
+    "vite": "^8.1.4",
+    "vitest": "^3.2.4"
+  },
+  "prisma": {
+    "seed": "node server/prisma/seed.js"
+  }
+}
